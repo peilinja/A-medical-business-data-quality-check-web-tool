@@ -44,11 +44,25 @@ app.layout = html.Div(
         dcc.Store(id='bar_third_level_second_fig_data', storage_type='session'),
         dcc.Store(id='drug_fourth_level_first_fig_data', storage_type='session'),
         dcc.Store(id='drug_fourth_level_second_fig_data', storage_type='session'),
-        # dcc.Store(id='bar_third_level_second_fig_data', storage_type='session'),
+
+        # 手术数据存储
+        dcc.Store(id='oper2_first_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='oper2_first_level_second_fig_data', storage_type='session'),
+        dcc.Store(id='oper2_second_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='oper2_second_level_second_fig_data', storage_type='session'),
+        dcc.Store(id='oper2_second_level_third_fig_data', storage_type='session'),
+
+        # 常规检验数据存储
+        dcc.Store(id='rout_exam_temp_first_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='rout_exam_temp_first_level_second_fig_data', storage_type='session'),
+        dcc.Store(id='temp_second_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='rout_third_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='rout_third_level_second_fig_data', storage_type='session'),
+        dcc.Store(id='exam_fourth_level_first_fig_data', storage_type='session'),
+        dcc.Store(id='exam_fourth_level_second_fig_data', storage_type='session'),
 
         # 监听url变化
         dcc.Location(id='url'),
-        # html.Div(id = 'page-content',)
         html.Div(
             [
                 # 最上方系统log栏
@@ -61,8 +75,6 @@ app.layout = html.Div(
                                  "letter-spacing": "2.5px",
                                  "color": "#606060",
                                  },
-                    #
-                    # color= "#5b625b",
                     color="#F9F9F9",
                     dark=True,
                     fluid=True,
@@ -79,8 +91,10 @@ app.layout = html.Div(
                                             dbc.ListGroupItem("数据库连接",id='db_connect', href="/dash/db_connect",color="primary"),
                                             dbc.ListGroupItem("数据明细概况", id='data_general_situation', href="/dash/data_general_situation"),
                                             dbc.ListGroupItem("抗菌药物/菌检出/药敏", id='data_anti', href="/dash/data_anti"),
+                                            dbc.ListGroupItem("手术",id='data_oper2', href="/dash/data_oper2" ),
+                                            dbc.ListGroupItem("生化/体温/检查",id='data_rout', href="/dash/data_rout" ),
+
                                             # dbc.ListGroupItem("患者人数",id='data_overall', href="/dash/data_overall" ),
-                                            # dbc.ListGroupItem("手术",id='data_oper2', href="/dash/data_oper2" ),
                                             # dbc.ListGroupItem("体温",id='data_temp', href="/dash/data_temp" ),
                                             # dbc.ListGroupItem("入出转",id='data_adt', href="/dash/data_adt" ),
                                             # dbc.ListGroupItem("菌检出",id='data_bar', href="/dash/data_bar" ),
@@ -164,7 +178,9 @@ app.layout = html.Div(
     [Output('data-show', 'children'),
     Output('db_connect', 'color'),
     Output('data_general_situation', 'color'),
-    Output('data_anti', 'color'),  ],
+    Output('data_anti', 'color'),
+    Output('data_oper2', 'color'),
+    Output('data_rout', 'color'),],
     Input('url', 'pathname')
 )
 def render_page_content(pathname):
@@ -172,6 +188,8 @@ def render_page_content(pathname):
                 'db_connect':'',
                'data_general_situation':'',
                'data_anti':'',
+               'data_oper2':'',
+               'data_rout':'',
                }
     if pathname is None:
         pathname = "/dash/"
@@ -183,10 +201,17 @@ def render_page_content(pathname):
         color_dic['rount_page'] = data_general_situation_page
         color_dic['data_general_situation'] = 'primary'
         return list(color_dic.values())
-
     elif pathname.endswith("/data_anti") :
         color_dic['rount_page'] = data_anti_page
         color_dic['data_anti'] = 'primary'
+        return list(color_dic.values())
+    elif pathname.endswith("/data_oper2") :
+        color_dic['rount_page'] = data_oper2_page
+        color_dic['data_oper2'] = 'primary'
+        return list(color_dic.values())
+    elif pathname.endswith("/data_rout") :
+        color_dic['rount_page'] = data_rout_page
+        color_dic['data_rout'] = 'primary'
         return list(color_dic.values())
     else:
         return html.H1('您访问的页面不存在！')
@@ -208,88 +233,9 @@ def render_page_content(pathname):
 
 
 
-# # 路由总控
-# @app.callback(
-#     # Output('page-content', 'children'),
-#     [Output('data-show', 'children'),
-#     Output('db_connect', 'color'),
-#     Output('data_general_situation', 'color'),
-#     Output('data_overall', 'color'),
-#     Output('data_oper2', 'color'),
-#     Output('data_temp', 'color'),
-#     Output('data_adt', 'color'),
-#     Output('data_bar', 'color'),
-#     Output('data_drug', 'color'),
-#     Output('data_anti', 'color'),
-#     Output('data_rout', 'color'),
-#     Output('data_exam', 'color')],
-#     Input('url', 'pathname')
-# )
-# def render_page_content(pathname):
-#     color_dic={ 'rount_page':'',
-#                 'db_connect':'',
-#                'data_general_situation':'',
-#                'data_overall':'',
-#                'data_oper2':'',
-#                'data_temp':'',
-#                'data_adt':'',
-#                'data_bar':'',
-#                'data_drug':'',
-#                'data_anti':'',
-#                'data_rout':'',
-#                'data_exam':'',
-#                }
-#     if pathname is None:
-#         pathname = "/dash/"
-#     if pathname.endswith("/dash/") or pathname.endswith("/db_connect"):
-#         color_dic['rount_page'] = db_conn_page
-#         color_dic['db_connect'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_general_situation") :
-#         color_dic['rount_page'] = data_general_situation_page
-#         color_dic['data_general_situation'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_overall"):
-#         color_dic['rount_page'] = data_overall_page
-#         color_dic['data_overall'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_oper2"):
-#         color_dic['rount_page'] = data_oper2_page
-#         color_dic['data_oper2'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_temp") :
-#         color_dic['rount_page'] = data_temp_page
-#         color_dic['data_temp'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_adt") :
-#         color_dic['rount_page'] = data_adt_page
-#         color_dic['data_adt'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_bar") :
-#         color_dic['rount_page'] = data_bar_page
-#         color_dic['data_bar'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_drug") :
-#         color_dic['rount_page'] = data_drug_page
-#         color_dic['data_drug'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_anti") :
-#         color_dic['rount_page'] = data_anti_page
-#         color_dic['data_anti'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_rout") :
-#         color_dic['rount_page'] = data_rout_page
-#         color_dic['data_rout'] = 'primary'
-#         return list(color_dic.values())
-#     elif pathname.endswith("/data_exam") :
-#         color_dic['rount_page'] = data_exam_page
-#         color_dic['data_exam'] = 'primary'
-#         return list(color_dic.values())
-#     else:
-#         return html.H1('您访问的页面不存在！')
 
 
 if __name__ == '__main__':
     # app.run_server(host='10.0.68.111',debug=False,port=8081, workers = 10)
-    app.run_server(host='10.0.23.105',debug=False,port=8081)
+    app.run_server(debug=False,port=8081)
     # app.run_server(host='10.0.68.111',debug=True,port=8081)

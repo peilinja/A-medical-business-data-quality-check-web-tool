@@ -272,17 +272,20 @@ def update_first_level_second_fig(anti_bar_drug_first_level_second_fig_data,db_c
 
     fig  = make_subplots(rows=1,cols=3)
     fig.add_trace(
-        go.Bar(x=anti['num'], y=anti['科室名称'], orientation='h', name='给药', marker_color=px.colors.qualitative.Dark24[1]),
-        row=1, col=2
+        go.Bar(x=anti['num'], y=anti['科室名称'], orientation='h', name='给药', marker_color=px.colors.qualitative.Dark24[0]),
+        row=1, col=1
     )
     fig.add_trace(
-        go.Bar(x=drug['num'], y=drug['科室名称'], orientation='h', name='药敏', marker_color=px.colors.qualitative.Dark24[2]),
-        row=1, col=3,
+        go.Bar(x=drug['num'], y=drug['科室名称'], orientation='h', name='药敏',
+               marker_color=px.colors.qualitative.Dark24[1]),
+        row=1, col=2,
     )
     fig.add_trace(
-        go.Bar(x=bar['num'],y=bar['科室名称'],orientation='h',name='菌检出', marker_color=px.colors.qualitative.Dark24[0]),
-        row=1,col=1
+        go.Bar(x=bar['num'],y=bar['科室名称'],orientation='h',name='菌检出', marker_color=px.colors.qualitative.Dark24[2]),
+        row=1,col=3
     )
+
+
     # 设置水平图例及位置
     fig.update_layout(
         margin=dict(l=20, r=20, t=20, b=20),
@@ -1057,8 +1060,6 @@ def download_first_level_third_fig_data_detail(n_clicks,db_con_url,count_time):
             for key in bus_dic.keys():
                 try:
                     temp = pd.read_sql(bus_dic[key], con=engine)
-                    print(key)
-                    print(temp)
                     if temp.shape[0] > 0:
                         temp.to_excel(writer, sheet_name=key)
                 except:

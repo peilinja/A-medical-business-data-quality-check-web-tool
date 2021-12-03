@@ -1,6 +1,5 @@
 import dash
 import dash_bootstrap_components as dbc
-from flask_caching import Cache
 app = dash.Dash(
     __name__,
     external_stylesheets=['https://cdn.staticfile.org/twitter-bootstrap/4.5.2/css/bootstrap.min.css',dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP],
