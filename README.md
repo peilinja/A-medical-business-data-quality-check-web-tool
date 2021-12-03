@@ -5,7 +5,6 @@
 3. Page3: Business quality detail_bacteria, Antidrug,Drug_sus_test
 4. Page4: Business data quality detail opera
 5. page5: Business data quality detail biochemistry,Temp,Checks
-6. 
 
     Steps:
     - Install Anaconda
